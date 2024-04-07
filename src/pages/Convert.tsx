@@ -1,23 +1,23 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo } from 'react';
 
 // ** MUI
-import { Box, Button } from "@mui/material";
+import { Box, Button } from '@mui/material';
 
 // ** service
-import { getConvertCurrency, getLatestCurrency } from "../service";
+import { getConvertCurrency, getLatestCurrency } from '../service';
 
 // ** types
-import { quoteType, selectOptionType } from "../types";
+import { quoteType, selectOptionType } from '../types';
 
 // ** components
-import ConvertCard from "../UI/ConvertCard/ConvertCard";
-import Loader from "../components/Loader/Loader";
+import ConvertCard from '../UI/ConvertCard/ConvertCard';
+import Loader from '../components/Loader/Loader';
 
 // ** icons
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 // ** utils
-import { formatNumber } from "../utils/formatNumber";
+import { formatNumber } from '../utils/formatNumber';
 
 const Convert = () => {
   const [currencyList, setCurrencyList] = useState<selectOptionType[]>([]);
@@ -64,10 +64,10 @@ const Convert = () => {
       {loading ? (
         <Loader />
       ) : (
-        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", flexGrow: 1 }}>
-          <Box sx={{ display: "flex", flexFlow: "column", alignItems: "center" }}>
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexGrow: 1 }}>
+          <Box sx={{ display: 'flex', flexFlow: 'column', alignItems: 'center' }}>
             <ConvertCard
-              cardLabel="From"
+              cardLabel='From'
               currency={String(chosenFromCurrency?.label)}
               cardValue={fromCurrencyValue}
               selectOptions={fromCurrencyList}
@@ -77,9 +77,9 @@ const Convert = () => {
               error={inputErr}
               clearError={() => setInputErr(false)}
             />
-            <ArrowForwardIcon sx={{ transform: "rotate(90deg)", marginY: 2 }} />
+            <ArrowForwardIcon sx={{ transform: 'rotate(90deg)', marginY: 2 }} />
             <ConvertCard
-              cardLabel="To"
+              cardLabel='To'
               currency={String(chosenToCurrency?.label)}
               cardValue={toCurrencyValue}
               selectOptions={toCurrencyList}
@@ -87,8 +87,13 @@ const Convert = () => {
               selectVal={chosenToCurrency}
               disableInput
             />
-            <Button variant="contained" sx={{ marginY: 2, width: "100%" }} onClick={convertCurrency} disabled={!fromCurrencyValue || fromCurrencyValue?.length === 0}>
-              {!fromCurrencyValue || fromCurrencyValue?.length === 0 ? "Enter an amount" : "Convert"}
+            <Button
+              variant='contained'
+              sx={{ marginY: 2, width: '100%' }}
+              onClick={convertCurrency}
+              disabled={!fromCurrencyValue || fromCurrencyValue?.length === 0}
+            >
+              {!fromCurrencyValue || fromCurrencyValue?.length === 0 ? 'Enter an amount' : 'Convert'}
             </Button>
           </Box>
         </Box>

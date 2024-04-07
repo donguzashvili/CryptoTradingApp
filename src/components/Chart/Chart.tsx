@@ -1,11 +1,11 @@
-import React from "react";
+import React from 'react';
 
 // ** MUI
-import { Box } from "@mui/material";
-import { LineChart } from "@mui/x-charts";
+import { Box } from '@mui/material';
+import { LineChart } from '@mui/x-charts';
 
 // ** types
-import { DataEntry } from "../../types";
+import { DataEntry } from '../../types';
 
 type ChartProps = {
   data: DataEntry[];
@@ -23,7 +23,7 @@ const Chart = ({ data, hourlyLabels }: ChartProps) => {
   } else {
     xAxisData = data.map(([timestamp]) => {
       const date = new Date(timestamp);
-      return `${date.getDate()} ${date.toLocaleString("default", { month: "short" })}`;
+      return `${date.getDate()} ${date.toLocaleString('default', { month: 'short' })}`;
     });
   }
 
@@ -33,13 +33,13 @@ const Chart = ({ data, hourlyLabels }: ChartProps) => {
   }, [data]);
 
   return (
-    <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%", width: "100%" }}>
+    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', width: '100%' }}>
       <LineChart
-        sx={{ bgcolor: "black" }}
-        xAxis={[{ scaleType: "point", data: xAxisData }]}
+        sx={{ bgcolor: 'black' }}
+        xAxis={[{ scaleType: 'point', data: xAxisData }]}
         series={[
           {
-            curve: "linear",
+            curve: 'linear',
             data: seriesData,
             showMark: ({ index }) => index % 2 === 0,
           },

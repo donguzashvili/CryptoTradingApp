@@ -1,12 +1,12 @@
 // ** MUI
-import { Skeleton } from "@mui/material";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
+import { Skeleton } from '@mui/material';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 
 const TableSkeleton = ({ rows = 10, columns = 7 }) => {
   const range = (length: number) => Array.from({ length }, (_, i) => i);
@@ -17,7 +17,7 @@ const TableSkeleton = ({ rows = 10, columns = 7 }) => {
           <TableRow>
             {range(columns).map((index) => (
               <TableCell key={index}>
-                <Skeleton animation="wave" />
+                <Skeleton animation='wave' />
               </TableCell>
             ))}
           </TableRow>
@@ -27,7 +27,7 @@ const TableSkeleton = ({ rows = 10, columns = 7 }) => {
             <TableRow key={index}>
               {range(columns).map((index) => (
                 <TableCell key={index}>
-                  <Skeleton animation="wave" />
+                  <Skeleton animation='wave' />
                 </TableCell>
               ))}
             </TableRow>
