@@ -35,7 +35,7 @@ const Convert = () => {
   const initData = async () => {
     setLoading(true);
     const currencies = await getLatestCurrency({ start: 1, limit: 10 });
-    const modifiedData = currencies.data.map((currency) => ({ value: currency.id, label: currency.symbol }));
+    const modifiedData = currencies.map((currency) => ({ value: currency.id, label: currency.symbol }));
     setCurrencyList(modifiedData);
     const modifiedToCurrencyData = modifiedData.slice(1, modifiedData.length);
     setChosenFromCurrency(modifiedData[0]);
@@ -55,8 +55,9 @@ const Convert = () => {
 
   const convertCurrency = async () => {
     const response = await getConvertCurrency(`${chosenFromCurrency?.value}`, `${chosenToCurrency?.label}`);
-    const exchangePrice = response.data[1].quote[chosenToCurrency?.label as keyof quoteType].price;
-    setToCurrencyValue(`${formatNumber(Number(fromCurrencyValue) * exchangePrice)}`);
+    const exchangePrice =
+      response[Number(chosenFromCurrency?.value)].quote[chosenToCurrency?.label as keyof quoteType].price;
+    setToCurrencyValue(`${formatNumber(Number(fromCurrencyValue) * exchangePrice, 8)}`);
   };
 
   return (

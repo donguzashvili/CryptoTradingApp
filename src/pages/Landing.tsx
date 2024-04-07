@@ -67,7 +67,7 @@ const Landing = () => {
 
   const initData = async () => {
     const response = await getLatestCurrency({ start: 1, limit: 10 });
-    setCryptoLists(response.data);
+    setCryptoLists(response);
     setLastUpdated(`${new Date()}`);
   };
 

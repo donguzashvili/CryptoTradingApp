@@ -45,7 +45,7 @@ interface Crypto {
 const CryptoTable = <T extends Crypto>({ headers, data }: CryptoTablePropType<T>) => {
   const navigate = useNavigate();
   const theme: Theme = useTheme();
-  if (data.length === 0) return <TableSkeleton />;
+  if (data?.length === 0) return <TableSkeleton />;
 
   const coloringNumbers = (value: string | number) => {
     const greenColor = theme.palette.success;
@@ -73,7 +73,7 @@ const CryptoTable = <T extends Crypto>({ headers, data }: CryptoTablePropType<T>
           </TableRow>
         </TableHead>
         <TableBody>
-          {data.map((row, idx) => (
+          {data?.map((row, idx) => (
             <TableRow
               sx={{
                 cursor: 'pointer',

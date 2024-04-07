@@ -7,7 +7,7 @@ const binanceUrl = import.meta.env.VITE_BINANCE_URL
 
 
 export const getLatestCurrency = async ({start, limit}: {start: number, limit: number}) => {
-        const response = await Service<Api.LatestListingCurrencyRequestType>(`https://cors-anywhere.herokuapp.com/${baseUrl}v1/cryptocurrency/listings/latest?start=${start}&limit=${limit}`)
+        const response = await Service<Api.LatestCurrencyType[]>(`${baseUrl}latest-currency?start=${start}&limit=${limit}`)
         return response
 }
 
@@ -20,7 +20,7 @@ export const getCurrencyChart = async ({symbol, interval, startTime, endTime}:{s
 }
 
 export const getConvertCurrency = async (convertFromId: string, convertToSymbol: string) => {
-    const respones = await Service<Api.getConvertCurrencyRequestType>(`https://cors-anywhere.herokuapp.com/${baseUrl}/v1/cryptocurrency/quotes/latest?id=${convertFromId}&convert=${convertToSymbol}`)
+    const respones = await Service<Api.getConvertCurrencyRequestType>(`${baseUrl}convert-currency?convertFromId=${convertFromId}&convertToSymbol=${convertToSymbol}`)
     return respones
 }
 

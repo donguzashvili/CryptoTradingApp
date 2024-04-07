@@ -10,7 +10,7 @@ const Api = async <T>(
     { method = 'GET', headers }: ApiPropType = { headers: {} }
 ): Promise<T> => {
     let customHeaders: { [key: string]: string } | undefined = {
-        'X-CMC_PRO_API_KEY': key,
+        'x-api-key': key,
         'Accept': 'application/json',
         'Accept-Encoding': 'gzip, deflate',
         ...headers,

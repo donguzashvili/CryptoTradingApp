@@ -4,10 +4,7 @@ export type LatestListingCurrencyRequestType = {
 }
 
 export type getConvertCurrencyRequestType = {
-    readonly data: {
-        readonly 1: LatestCurrencyType
-    }
-    readonly status: requestStatusType
+        readonly [key: number]: LatestCurrencyType
 }
 
 export type requestStatusType = {
