@@ -3,10 +3,11 @@ import AppBar from '@mui/material/AppBar';
 import { Box } from '@mui/material';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import { Link } from '@mui/material';
+import { Link } from 'react-router-dom';
 
 const linkStyles = {
   color: '#ffffff',
+  textDecoration: 'none',
 };
 
 export default function Header() {
@@ -19,12 +20,12 @@ export default function Header() {
             justifyContent: 'space-around',
           }}
         >
-          <Link href='/' sx={linkStyles} underline='none'>
+          <Link to='/' style={linkStyles}>
             <Typography variant='h6' component='div'>
               Table
             </Typography>
           </Link>
-          <Link href='/convert' sx={linkStyles} underline='none'>
+          <Link to='/convert' style={linkStyles}>
             <Typography variant='h6' component='div'>
               Convert
             </Typography>
