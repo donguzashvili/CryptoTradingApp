@@ -20,8 +20,9 @@ export const getCurrencyChart = async ({symbol, interval, startTime, endTime}:{s
     return response
 }
 
-export const getConvertCurrency = async (convertFromId: string, convertToSymbol: string) => {
-    const respones = await Service<Api.getConvertCurrencyRequestType>(`${baseUrl}convert-currency?convertFromId=${convertFromId}&convertToSymbol=${convertToSymbol}`)
+export const getConvertCurrency = async (convertFromId: string, convertToSymbol?: string) => {
+    const queryString = `convert-currency?convertFromId=${convertFromId}${convertToSymbol ? `&convertToSymbol=${convertToSymbol}` : ''}`
+    const respones = await Service<Api.getConvertCurrencyRequestType>(`${baseUrl}${queryString}`)
     return respones
 }
 

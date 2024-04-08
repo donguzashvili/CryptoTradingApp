@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 // ** service
-import { getCurrencyChart } from '../service';
+import { getConvertCurrency, getCurrencyChart } from '../service';
 
 // ** MUI
 import { Box, Paper, CircularProgress } from '@mui/material';
@@ -12,12 +12,14 @@ import Chart from '../components/Chart/Chart';
 import ChartHeader from '../UI/ChartHeader/ChartHeader';
 
 // ** types
-import { candleStickData } from '../types';
+import { candleStickData, getConvertCurrencyRequestType } from '../types';
 import { enumChartLabelEnum } from '../types/enums';
+import CoinData from '../UI/CoinData/CoinData';
 
 const ChartPage = () => {
   const [searchParams] = useSearchParams();
   const [chartLabels, setChartLabels] = useState<enumChartLabelEnum>(enumChartLabelEnum.minutes);
+  const [coinData, setCoinData] = useState<getConvertCurrencyRequestType>();
   const [data, setData] = useState<candleStickData>();
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -36,13 +38,17 @@ const ChartPage = () => {
     const secondOrMinutes = time === 0 ? 1 : Number(time) * 24;
     const chosenTimeInMs = secondOrMinutes * 60 * 60 * 1000;
     const startTime = currentTime - chosenTimeInMs;
-    const response = await getCurrencyChart({
+    const response = getCurrencyChart({
       interval,
       symbol: currency,
       startTime: `${startTime}`,
       endTime: `${currentTime}`,
     });
-    setData(response);
+    const coinData = getConvertCurrency(id);
+
+    const [chartData, currencyData] = await Promise.all([response, coinData]);
+    setCoinData(currencyData);
+    setData(chartData);
     setLoading(false);
   };
 
@@ -54,7 +60,10 @@ const ChartPage = () => {
           <CircularProgress />
         </Box>
       ) : (
-        data && <Chart data={data} chartLabels={chartLabels} />
+        <>
+          {coinData && <CoinData data={coinData[1]} />}
+          {data && <Chart data={data} chartLabels={chartLabels} />}
+        </>
       )}
     </Box>
   );

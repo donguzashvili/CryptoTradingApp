@@ -30,7 +30,7 @@ const CryptoTable = memo(function CryptoTable({ headers, data }: CryptoTableProp
     <TableContainer component={Paper} sx={{ borderTopLeftRadius: 0, borderTopRightRadius: 0 }}>
       <Table sx={{ minWidth: 700 }} aria-label='customized table'>
         <TableHead>
-          <TableRow>
+          <TableRow sx={{ borderTop: `1px solid ${theme.palette.grey['800']}` }}>
             {headers.map((el) => (
               <TableCell align='left' key={String(el.key)}>
                 {el.name || 'Icon'}
