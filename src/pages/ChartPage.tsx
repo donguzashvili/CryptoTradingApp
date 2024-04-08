@@ -21,8 +21,10 @@ const ChartPage = () => {
   const [chartLabels, setChartLabels] = useState<enumChartLabelEnum>(enumChartLabelEnum.minutes);
   const [coinData, setCoinData] = useState<getConvertCurrencyRequestType>();
   const [data, setData] = useState<candleStickData>();
-
   const [loading, setLoading] = useState<boolean>(false);
+
+  const currency = searchParams.get('currency');
+  const id = searchParams.get('id');
 
   useEffect(() => {
     initData('1m', enumChartLabelEnum.minutes);
@@ -31,8 +33,7 @@ const ChartPage = () => {
   const initData = async (interval: string, time: enumChartLabelEnum) => {
     setLoading(true);
     setChartLabels(time);
-    const currency = searchParams.get('currency');
-    const id = searchParams.get('id');
+
     if (!currency || !id) return;
     const currentTime = new Date().getTime();
     const secondOrMinutes = time === 0 ? 1 : Number(time) * 24;
@@ -47,6 +48,7 @@ const ChartPage = () => {
     const coinData = getConvertCurrency(id);
 
     const [chartData, currencyData] = await Promise.all([response, coinData]);
+    console.log(currencyData);
     setCoinData(currencyData);
     setData(chartData);
     setLoading(false);
@@ -61,7 +63,7 @@ const ChartPage = () => {
         </Box>
       ) : (
         <>
-          {coinData && <CoinData data={coinData[1]} />}
+          {coinData && id && <CoinData data={coinData[Number(id)]} />}
           {data && <Chart data={data} chartLabels={chartLabels} />}
         </>
       )}
