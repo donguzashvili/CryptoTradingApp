@@ -6,20 +6,7 @@ import Select from '../Select/Select';
 
 // ** types
 import { SxProps } from '@mui/system';
-import { selectOptionType } from '../../types';
-
-type ConvertCardPropType = {
-  cardLabel: string;
-  currency?: string;
-  onSelectChange(val: selectOptionType): void;
-  onInputChange?: (val: string) => void;
-  selectVal?: selectOptionType;
-  cardValue?: string;
-  selectOptions: selectOptionType[];
-  disableInput?: boolean;
-  error?: boolean;
-  clearError?: () => void;
-};
+import { ConvertCardPropType } from '../../types';
 
 const BoxWrapper = ({ children, sx }: { children: React.ReactNode; sx?: SxProps }) => {
   return <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', ...sx }}>{children}</Box>;
@@ -56,7 +43,7 @@ const ConvertCard = ({
               disabled={disableInput}
               placeholder={'0.00'}
               sx={!error ? { '&::before': { content: 'none' } } : {}}
-              value={cardValue}
+              value={cardValue || ''}
               onChange={(e) => handleInputChange(e.currentTarget.value)}
             />
           </Box>

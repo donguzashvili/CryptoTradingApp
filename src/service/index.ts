@@ -7,7 +7,8 @@ const binanceUrl = import.meta.env.VITE_BINANCE_URL
 
 
 export const getLatestCurrency = async ({start, limit}: {start: number, limit: number}) => {
-        const response = await Service<Api.LatestCurrencyType[]>(`${baseUrl}latest-currency?start=${start}&limit=${limit}`)
+    const queryString = `latest-currency?start=${start}&limit=${limit}`
+        const response = await Service<Api.LatestCurrencyType[]>(`${baseUrl}${queryString}`)
         return response
 }
 

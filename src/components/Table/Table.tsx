@@ -1,63 +1,29 @@
+import { memo } from 'react';
 import { useNavigate } from 'react-router-dom';
-
-// ** utils
-import { getNestedProperty } from '../../utils/getNestedProperty';
-import { formatNumber } from '../../utils/formatNumber';
 
 // ** components
 import TableSkeleton from './TableSkeleton';
+import TableBodyCell from '../../UI/TableBodyCell/TableBodyCell';
 
 // ** MUI
-import { Box, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import Table from '@mui/material/Table';
 import Paper from '@mui/material/Paper';
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import { Theme, useTheme } from '@mui/material';
 
-type CryptoTablePropType<T> = {
-  headers: {
-    name: string;
-    key: keyof T;
-    currency?: boolean;
-    percent?: boolean;
-  }[];
-  data: T[];
-};
+// ** types
+import { CryptoTablePropType } from '../../types';
 
-const tablecellStyle = {
-  display: 'flex',
-  alignItems: 'center',
-  position: 'relative',
-};
-
-const arrowStyle = {
-  transform: 'rotate(90deg)',
-  height: '10px',
-  width: '10px',
-  position: 'absolute',
-  left: '-10px',
-};
-
-interface Crypto {
-  symbol: string;
-}
-
-const CryptoTable = <T extends Crypto>({ headers, data }: CryptoTablePropType<T>) => {
+const CryptoTable = memo(function CryptoTable({ headers, data }: CryptoTablePropType) {
   const navigate = useNavigate();
   const theme: Theme = useTheme();
   if (data?.length === 0) return <TableSkeleton />;
 
-  const coloringNumbers = (value: string | number) => {
-    const greenColor = theme.palette.success;
-    const redColor = theme.palette.error;
-    if (!Number(value)) return;
-    if (Number(value) > 0) {
-      return {
-        color: greenColor['dark'],
-        Arrow: <PlayArrowIcon sx={{ ...arrowStyle, transform: 'rotate(270deg)' }} />,
-      };
-    }
-    return { color: redColor['dark'], Arrow: <PlayArrowIcon sx={arrowStyle} /> };
+  const tableRowStyle = {
+    cursor: 'pointer',
+    '&:hover': {
+      backgroundColor: theme.palette.action.hover,
+    },
   };
 
   return (
@@ -75,38 +41,25 @@ const CryptoTable = <T extends Crypto>({ headers, data }: CryptoTablePropType<T>
         <TableBody>
           {data?.map((row, idx) => (
             <TableRow
-              sx={{
-                cursor: 'pointer',
-                '&:hover': {
-                  backgroundColor: theme.palette.action.hover,
-                },
-              }}
+              sx={tableRowStyle}
               key={`row_${idx}`}
-              onClick={() => navigate(`/charts?currency=${row.symbol}`)}
+              onClick={() => navigate(`/charts?currency=${row.symbol}&id=${row.id}`)}
             >
-              {headers.map((header, cellIdx) => {
-                const key = header.key as string;
-                const value = getNestedProperty(row, key);
-                const formattedValue: string | number = formatNumber(value ?? 'Icon');
-                const coloringNumbersResult = !key.includes('price') ? coloringNumbers(formattedValue) : undefined;
-                const { color, Arrow } = coloringNumbersResult ?? { color: '', Arrow: <></> };
-                return (
-                  <TableCell align='left' key={`${idx}_${cellIdx}`} sx={{ color: color || '' }}>
-                    <Box sx={tablecellStyle}>
-                      {header.currency && '$'}
-                      {Arrow && Arrow}
-                      {formattedValue}
-                      {header.percent && '%'}
-                    </Box>
-                  </TableCell>
-                );
-              })}
+              {headers.map((header, cellIdx) => (
+                <TableBodyCell
+                  key={`${idx}_${cellIdx}`}
+                  row={row}
+                  headerKey={String(header.key)}
+                  currency={header.currency}
+                  percent={header.percent}
+                />
+              ))}
             </TableRow>
           ))}
         </TableBody>
       </Table>
     </TableContainer>
   );
-};
+});
 
 export default CryptoTable;

@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo } from 'react';
 
 // ** MUI
-import { Box, Button } from '@mui/material';
+import { Box, Button, CircularProgress } from '@mui/material';
 
 // ** service
 import { getConvertCurrency, getLatestCurrency } from '../service';
@@ -24,8 +24,8 @@ const Convert = () => {
   const [chosenFromCurrency, setChosenFromCurrency] = useState<selectOptionType>();
   const [chosenToCurrency, setChosenToCurrency] = useState<selectOptionType>();
   const [fromCurrencyValue, setFromCurrencyValue] = useState<string>();
-  const [toCurrencyValue, setToCurrencyValue] = useState<string>();
-  const [loading, setLoading] = useState<boolean>(false);
+  const [toCurrencyValue, setToCurrencyValue] = useState<string>('0.00');
+  const [loading, setLoading] = useState<{ global: boolean; local: boolean }>({ global: false, local: false });
   const [inputErr, setInputErr] = useState<boolean>(false);
 
   useEffect(() => {
@@ -33,14 +33,14 @@ const Convert = () => {
   }, []);
 
   const initData = async () => {
-    setLoading(true);
+    setLoading((prev) => ({ ...prev, global: true }));
     const currencies = await getLatestCurrency({ start: 1, limit: 10 });
     const modifiedData = currencies.map((currency) => ({ value: currency.id, label: currency.symbol }));
     setCurrencyList(modifiedData);
     const modifiedToCurrencyData = modifiedData.slice(1, modifiedData.length);
     setChosenFromCurrency(modifiedData[0]);
     setChosenToCurrency(modifiedToCurrencyData[0]);
-    setLoading(false);
+    setLoading((prev) => ({ ...prev, global: false }));
   };
 
   const fromCurrencyList = useMemo(() => {
@@ -54,15 +54,17 @@ const Convert = () => {
   }, [chosenFromCurrency, currencyList]);
 
   const convertCurrency = async () => {
+    setLoading((prev) => ({ ...prev, local: true }));
     const response = await getConvertCurrency(`${chosenFromCurrency?.value}`, `${chosenToCurrency?.label}`);
     const exchangePrice =
       response[Number(chosenFromCurrency?.value)].quote[chosenToCurrency?.label as keyof quoteType].price;
     setToCurrencyValue(`${formatNumber(Number(fromCurrencyValue) * exchangePrice, 8)}`);
+    setLoading((prev) => ({ ...prev, local: false }));
   };
 
   return (
     <>
-      {loading ? (
+      {loading.global ? (
         <Loader />
       ) : (
         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexGrow: 1 }}>
@@ -78,7 +80,9 @@ const Convert = () => {
               error={inputErr}
               clearError={() => setInputErr(false)}
             />
-            <ArrowForwardIcon sx={{ transform: 'rotate(90deg)', marginY: 2 }} />
+            <Box minHeight='50px' marginY={2} display='flex' alignItems='center'>
+              {loading.local ? <CircularProgress /> : <ArrowForwardIcon sx={{ transform: 'rotate(90deg)' }} />}
+            </Box>
             <ConvertCard
               cardLabel='To'
               currency={String(chosenToCurrency?.label)}

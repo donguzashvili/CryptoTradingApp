@@ -18,19 +18,20 @@ type customSelectPropType = {
 };
 
 export default function CustomSelect({ options, label, onChange, value, disabled, sx }: customSelectPropType) {
+  const chosenValue = value ? value.time || value.value : '';
   return (
     <FormControl sx={{ m: 1, minWidth: 120 }} size='small'>
       {label && <InputLabel id='select-small-label'>{label}</InputLabel>}
       <Select
         labelId='select-small-label'
         id='select-small'
-        value={`${value?.value || ''}`}
+        value={chosenValue}
         label={label}
         disabled={disabled}
         sx={{ ...sx }}
       >
         {options.map((el) => (
-          <MenuItem key={el.value} value={el.value} onClick={() => onChange(el)}>
+          <MenuItem key={el.time || el.value} value={el.time || el.value} onClick={() => onChange(el)}>
             {el.label}
           </MenuItem>
         ))}
