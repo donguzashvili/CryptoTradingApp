@@ -5,16 +5,16 @@ import { useSearchParams } from 'react-router-dom';
 import { getConvertCurrency, getCurrencyChart } from '../service';
 
 // ** MUI
-import { Box, Paper, CircularProgress } from '@mui/material';
+import { Box, Paper, CircularProgress, Typography } from '@mui/material';
 
 // ** components
 import Chart from '../components/Chart/Chart';
 import ChartHeader from '../UI/ChartHeader/ChartHeader';
+import CoinData from '../UI/CoinData/CoinData';
 
 // ** types
 import { candleStickData, getConvertCurrencyRequestType } from '../types';
 import { enumChartLabelEnum } from '../types/enums';
-import CoinData from '../UI/CoinData/CoinData';
 
 const ChartPage = () => {
   const [searchParams] = useSearchParams();
@@ -22,6 +22,7 @@ const ChartPage = () => {
   const [coinData, setCoinData] = useState<getConvertCurrencyRequestType>();
   const [data, setData] = useState<candleStickData>();
   const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>();
 
   const currency = searchParams.get('currency');
   const id = searchParams.get('id');
@@ -32,26 +33,30 @@ const ChartPage = () => {
 
   const initData = async (interval: string, time: enumChartLabelEnum) => {
     setLoading(true);
-    setChartLabels(time);
+    try {
+      setChartLabels(time);
 
-    if (!currency || !id) return;
-    const currentTime = new Date().getTime();
-    const secondOrMinutes = time === 0 ? 1 : Number(time) * 24;
-    const chosenTimeInMs = secondOrMinutes * 60 * 60 * 1000;
-    const startTime = currentTime - chosenTimeInMs;
-    const response = getCurrencyChart({
-      interval,
-      symbol: currency,
-      startTime: `${startTime}`,
-      endTime: `${currentTime}`,
-    });
-    const coinData = getConvertCurrency(id);
+      if (!currency || !id) return;
+      const currentTime = new Date().getTime();
+      const secondOrMinutes = time === 0 ? 1 : Number(time) * 24;
+      const chosenTimeInMs = secondOrMinutes * 60 * 60 * 1000;
+      const startTime = currentTime - chosenTimeInMs;
+      const response = getCurrencyChart({
+        interval,
+        symbol: currency,
+        startTime: `${startTime}`,
+        endTime: `${currentTime}`,
+      });
+      const coinData = getConvertCurrency(id);
 
-    const [chartData, currencyData] = await Promise.all([response, coinData]);
-    console.log(currencyData);
-    setCoinData(currencyData);
-    setData(chartData);
-    setLoading(false);
+      const [chartData, currencyData] = await Promise.all([response, coinData]);
+      setCoinData(currencyData);
+      setData(chartData);
+    } catch (err) {
+      setError('Data not found please try different coin');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -65,6 +70,11 @@ const ChartPage = () => {
         <>
           {coinData && id && <CoinData data={coinData[Number(id)]} />}
           {data && <Chart data={data} chartLabels={chartLabels} />}
+          {error && (
+            <Typography textAlign='center' paddingY={1}>
+              {error}
+            </Typography>
+          )}
         </>
       )}
     </Box>

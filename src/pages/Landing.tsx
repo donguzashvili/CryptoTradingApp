@@ -61,7 +61,10 @@ const Landing = () => {
       >
         <Box>
           {loading ? (
-            <CircularProgress />
+            <Box sx={{ display: 'flex', alignItems: 'center', flexFlow: 'column nowrap', paddingY: 2 }}>
+              <Typography>First load can take up to 60 seconds</Typography>
+              <CircularProgress />
+            </Box>
           ) : (
             <Box display='flex' alignItems='center'>
               <Typography variant='body2'>Last updated: {lastUpdated}</Typography>
